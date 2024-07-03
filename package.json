@@ -1,0 +1,40 @@
+{
+  "name": "@caryatid/lendy-sdk",
+  "version": "0.0.1",
+  "description": "Money Lendy SDK",
+  "main": "build/index.js",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "compile": "tsc",
+    "compile:watch": "tsc -w",
+    "release:minor": "standard-version --release-as minor",
+    "release:patch": "standard-version --release-as patch",
+    "release:major": "standard-version --release-as major",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write --ignore-unknown",
+      "eslint --max-warnings=0"
+    ]
+  },
+  "author": "https://texture.finance/",
+  "license": "MIT",
+  "devDependencies": {
+    "args": "^5.0.3",
+    "eslint": "^8.54.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.2",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "@solana/spl-token": "^0.3.9",
+    "@solana/web3.js": "^1.87.6",
+    "buffer": "^6.0.3",
+    "standard-version": "^9.5.0",
+    "uuid": "^9.0.1"
+  }
+}
