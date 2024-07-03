@@ -1,5 +1,5 @@
 {
-  "name": "@caryatid/lendy-sdk",
+  "name": "@texture-finance/lendy-sdk",
   "version": "0.0.1",
   "description": "Money Lendy SDK",
   "main": "build/index.js",
