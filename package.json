@@ -1,6 +1,6 @@
 {
-  "name": "@texture-finance/lendy-sdk",
-  "version": "0.0.1",
+  "name": "@caryatid/lendy-sdk",
+  "version": "0.1.11",
   "description": "Money Lendy SDK",
   "main": "build/index.js",
   "files": [

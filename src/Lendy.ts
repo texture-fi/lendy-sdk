@@ -81,13 +81,9 @@ export class Lendy {
     pair: PublicKey,
     principal: number,
     collateral: number,
-    clientOfferUuid: string,
+    clientOfferUuidBuffer: Buffer,
   ) {
     const [lenderKey] = findUser(this.auth);
-
-    const clientOfferUuidBuffer = Buffer.alloc(16);
-    clientOfferUuidBuffer.write(clientOfferUuid);
-
     const [offerKey] = findOffer(clientOfferUuidBuffer, lenderKey);
 
     const keys: AccountMeta[] = [
@@ -118,12 +114,9 @@ export class Lendy {
   async borrow(
     offerKey: PublicKey,
     principalAmount: number,
-    bulkUuid: string | Buffer,
-    clientLoanUuid: string,
+    bulkUuid: Buffer,
+    clientLoanUuidBuffer: Buffer,
   ) {
-    const clientLoanUuidBuffer = Buffer.alloc(16);
-    clientLoanUuidBuffer.write(clientLoanUuid);
-
     const [borrowerAccKey] = findUser(this.auth);
     const offer = await this.accounts.offer(offerKey);
 
@@ -170,17 +163,11 @@ export class Lendy {
     console.log(keys.map(({ pubkey }) => pubkey.toString()));
 
     const buffer = Buffer.alloc(borrowParamsLayout.span);
-    let uuidBuffer: Buffer;
-    if (typeof bulkUuid === 'string') {
-      uuidBuffer = Buffer.alloc(16);
-      uuidBuffer.write(bulkUuid);
-    } else {
-      uuidBuffer = bulkUuid;
-    }
+
     borrowParamsLayout.encode(
       {
         principal_amount: BigInt(principalAmount),
-        bulk_uuid: uuidBuffer,
+        bulk_uuid: bulkUuid,
         client_loan_id: clientLoanUuidBuffer,
       },
       buffer,
@@ -544,12 +531,9 @@ export class Lendy {
   async extendConstPrincipal(
     loanKey: PublicKey,
     offerKey: PublicKey,
-    bulkUuid: string,
-    clientLoanUuid: string,
+    uuidBuffer: Buffer,
+    clientLoanUuidBuffer: Buffer,
   ) {
-    const clientLoanUuidBuffer = Buffer.alloc(16);
-    clientLoanUuidBuffer.write(clientLoanUuid);
-
     const [borrowerAccKey] = findUser(this.auth);
 
     const [offer, loan] = await Promise.all([
@@ -612,8 +596,6 @@ export class Lendy {
     ];
 
     const buffer = Buffer.alloc(extendParamsLayout.span);
-    const uuidBuffer = Buffer.alloc(16);
-    uuidBuffer.write(bulkUuid);
     extendParamsLayout.encode(
       {
         bulk_uuid: uuidBuffer,
@@ -646,12 +628,9 @@ export class Lendy {
     loanLender: PublicKey,
     loanPair: PublicKey,
     offerKey: PublicKey,
-    bulkUuid: string,
-    clientLoanUuid: string,
+    uuidBuffer: Buffer,
+    clientLoanUuidBuffer: Buffer,
   ) {
-    const clientLoanUuidBuffer = Buffer.alloc(16);
-    clientLoanUuidBuffer.write(clientLoanUuid);
-
     const [borrowerAccKey] = findUser(this.auth);
 
     const offer = await this.accounts.offer(offerKey);
@@ -723,8 +702,6 @@ export class Lendy {
     console.log(keys.map(({ pubkey }) => pubkey.toString()));
 
     const buffer = Buffer.alloc(extendParamsLayout.span);
-    const uuidBuffer = Buffer.alloc(16);
-    uuidBuffer.write(bulkUuid);
     extendParamsLayout.encode(
       {
         bulk_uuid: uuidBuffer,
@@ -787,11 +764,9 @@ export class Lendy {
 
   async splitLoanByCollateral(
     loanKey: PublicKey,
-    clientLoanUuid: string,
+    clientLoanUuidBuffer: Buffer,
     principal: bigint,
   ) {
-    const clientLoanUuidBuffer = Buffer.alloc(16);
-    clientLoanUuidBuffer.write(clientLoanUuid);
     const [expectedBorrower] = findUser(this.auth);
     const [newLoan] = findLoan(clientLoanUuidBuffer, expectedBorrower);
 
